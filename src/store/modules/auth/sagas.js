@@ -1,4 +1,5 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 import history from '~/services/history';
@@ -18,11 +19,23 @@ export function* signIn({ payload }) {
     console.tron.log(token);
 
     yield put(signInSuccess(token));
-
     history.push('/');
   } catch (err) {
+    toast.error(err.response.data[0].message);
     yield put(signInFailure());
   }
 }
 
-export default all([takeLatest('@auth/SIGN_IN_REQUEST', signIn)]);
+export function setToken({ payload }) {
+  if (!payload) return;
+
+  const { auth, teams } = payload;
+
+  if (auth) api.defaults.headers.Authorization = `Bearer ${auth.token}`;
+  if (teams) api.defaults.headers.Team = teams.active.slug;
+}
+
+export default all([
+  takeLatest('persist/REHYDRATE', setToken),
+  takeLatest('@auth/SIGN_IN_REQUEST', signIn),
+]);

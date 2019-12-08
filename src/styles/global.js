@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
@@ -19,7 +20,7 @@ export default createGlobalStyle`
   }
 
   html, body, #root {
-    min-height: 100%;
+    height: 100%;
   }
 
   input, button {
