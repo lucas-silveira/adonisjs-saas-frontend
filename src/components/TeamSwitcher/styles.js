@@ -33,3 +33,38 @@ export const Team = styled.button`
     }
   }
 `;
+
+export const NewTeam = styled.button`
+  width: 50px;
+  height: 50px;
+  color: rgba(255, 255, 255, 0.3);
+  background: transparent;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  transition: all 200ms;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.6);
+    border: 1px dashed rgba(255, 255, 255, 0.6);
+  }
+`;
+
+export const Logout = styled.button`
+  width: 50px;
+  height: 50px;
+  color: #e04848;
+  background: transparent;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px dashed #e04848;
+  border-radius: 50%;
+  transition all 200ms;
+
+  &:hover {
+    color: #a43d3d;
+    border-color: #a43d3d;
+  }
+`;

@@ -1,13 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { getTeamsRequest, selectTeam } from '~/store/modules/teams/actions';
+import Modal from '../Modal';
+import Button from '~/styles/components/Button';
 
-import { Container, TeamList, Team } from './styles';
+import { signOut } from '~/store/modules/auth/actions';
+
+import {
+  getTeamsRequest,
+  createTeamRequest,
+  selectTeam,
+  openModal,
+  closeModal,
+} from '~/store/modules/teams/actions';
+
+import { Container, TeamList, Team, NewTeam, Logout } from './styles';
 
 export default function TeamSwitcher() {
   const dispatch = useDispatch();
-  const teams = useSelector(state => state.teams.data);
+  const [newTeam, setNewTeam] = useState('');
+  const teams = useSelector(state => state.teams);
 
   useEffect(() => {
     dispatch(getTeamsRequest());
@@ -17,10 +29,32 @@ export default function TeamSwitcher() {
     dispatch(selectTeam(team));
   }
 
+  function handleOpenModal() {
+    dispatch(openModal());
+  }
+
+  function handleCloseModal() {
+    dispatch(closeModal());
+  }
+
+  function handleInputChange(event) {
+    setNewTeam(event.target.value);
+  }
+
+  function handleCreateTeam(event) {
+    event.preventDefault();
+
+    dispatch(createTeamRequest(newTeam));
+  }
+
+  function handleSignOut() {
+    dispatch(signOut());
+  }
+
   return (
     <Container>
       <TeamList>
-        {teams.map(team => (
+        {teams.data.map(team => (
           <Team key={team.id} onClick={() => handleSelectTeam(team)}>
             <img
               alt={team.name}
@@ -28,7 +62,33 @@ export default function TeamSwitcher() {
             />
           </Team>
         ))}
+
+        <NewTeam onClick={handleOpenModal}>Novo</NewTeam>
+
+        {teams.teamModalOpen && (
+          <Modal>
+            <h1>Criar time</h1>
+
+            <form onSubmit={handleCreateTeam}>
+              <span>NOME</span>
+              <input
+                name="newTeam"
+                value={newTeam}
+                onChange={handleInputChange}
+              />
+
+              <Button size="large" type="submit">
+                Salvar
+              </Button>
+              <Button size="small" color="gray" onClick={handleCloseModal}>
+                Cancelar
+              </Button>
+            </form>
+          </Modal>
+        )}
       </TeamList>
+
+      <Logout onClick={handleSignOut}>Sair</Logout>
     </Container>
   );
 }

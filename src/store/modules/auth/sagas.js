@@ -16,7 +16,6 @@ export function* signIn({ payload }) {
     });
 
     const { token } = response.data;
-    console.tron.log(token);
 
     yield put(signInSuccess(token));
     history.push('/');
@@ -35,7 +34,12 @@ export function setToken({ payload }) {
   if (teams) api.defaults.headers.Team = teams.active.slug;
 }
 
+export function signOut() {
+  history.push('/signin');
+}
+
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
   takeLatest('@auth/SIGN_IN_REQUEST', signIn),
+  takeLatest('@auth/SIGN_OUT', signOut),
 ]);
