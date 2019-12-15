@@ -17,6 +17,8 @@ export function* signIn({ payload }) {
 
     const { token } = response.data;
 
+    api.defaults.headers.Authorization = `Bearer ${token}`;
+
     yield put(signInSuccess(token));
     history.push('/');
   } catch (err) {
@@ -48,8 +50,10 @@ export function setToken({ payload }) {
 
   const { auth, teams } = payload;
 
-  if (auth) api.defaults.headers.Authorization = `Bearer ${auth.token}`;
-  if (teams) api.defaults.headers.Team = teams.active.slug;
+  if (auth.token) {
+    api.defaults.headers.Authorization = `Bearer ${auth.token}`;
+    api.defaults.headers.Team = teams.active.slug;
+  }
 }
 
 export function signOut() {

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import api from '~/services/api';
+
 import {
-  getProjectsRequest,
   createProjectRequest,
   openProjectsModal,
   closeProjectsModal,
@@ -19,12 +20,18 @@ import { Container, Project } from './styles';
 export default function Projects() {
   const dispatch = useDispatch();
   const teams = useSelector(state => state.teams);
-  const projects = useSelector(state => state.projects);
   const members = useSelector(state => state.members);
+  const projects = useSelector(state => state.projects);
+  const [projectsData, setProjectsData] = useState([]);
   const [newProject, setNewProject] = useState('');
 
   useEffect(() => {
-    dispatch(getProjectsRequest());
+    async function getProjects() {
+      const response = await api.get('projects');
+      setProjectsData(response.data);
+    }
+
+    getProjects();
   }, [teams.active]); //eslint-disable-line
 
   function handleInputChange(event) {
@@ -53,11 +60,11 @@ export default function Projects() {
             </div>
           </header>
 
-          {projects.data.map(project => (
-            <Project key={project.id}>
-              <p>{project.title}</p>
-            </Project>
-          ))}
+          {projectsData.map(project => (
+              <Project key={project.id}>
+                <p>{project.title}</p>
+              </Project>
+            ))}
         </>
       ) : (
         <header>

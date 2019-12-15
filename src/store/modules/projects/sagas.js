@@ -3,17 +3,7 @@ import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
-import { getProjectsSuccess, createProjectSuccess } from './actions';
-
-export function* getProjects() {
-  try {
-    const response = yield call(api.get, 'projects');
-
-    yield put(getProjectsSuccess(response.data));
-  } catch (err) {
-    toast.error(err.response.data[0].message);
-  }
-}
+import { createProjectSuccess } from './actions';
 
 export function* createProject({ payload }) {
   const { data } = payload;
@@ -28,6 +18,5 @@ export function* createProject({ payload }) {
 }
 
 export default all([
-  takeLatest('@projects/GET_PROJECTS_REQUEST', getProjects),
   takeLatest('@projects/CREATE_PROJECT_REQUEST', createProject),
 ]);
