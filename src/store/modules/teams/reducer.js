@@ -27,6 +27,7 @@ export default function teams(state = INITIAL_STATE, action) {
       }
       case '@teams/CREATE_TEAM_SUCCESS': {
         draft.data.push(action.payload.team);
+        draft.teamModalOpen = false;
         break;
       }
       case '@auth/SIGN_OUT': {

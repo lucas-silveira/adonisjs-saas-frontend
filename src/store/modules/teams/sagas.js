@@ -3,12 +3,11 @@ import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
-import { getTeamsSuccess, createTeamSuccess, closeModal } from './actions';
+import { getTeamsSuccess, createTeamSuccess } from './actions';
 
 export function* getTeams() {
   try {
     const response = yield call(api.get, 'teams');
-
     yield put(getTeamsSuccess(response.data));
   } catch (err) {
     toast.error(err.response.data[0].message);
@@ -23,7 +22,6 @@ export function* createTeam({ payload }) {
     });
 
     yield put(createTeamSuccess(response.data));
-    yield put(closeModal());
   } catch (err) {
     toast.error(err.response.data[0].message);
   }

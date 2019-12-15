@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import api from '~/services/api';
 import history from '~/services/history';
 
-import { signInSuccess, signInFailure } from './actions';
+import { signInSuccess } from './actions';
 
 export function* signIn({ payload }) {
   try {
@@ -21,7 +21,25 @@ export function* signIn({ payload }) {
     history.push('/');
   } catch (err) {
     toast.error(err.response.data[0].message);
-    yield put(signInFailure());
+  }
+}
+
+export function* signUp({ payload }) {
+  try {
+    const { name, email, password } = payload;
+
+    const response = yield call(api.post, 'users', {
+      email,
+      name,
+      password,
+    });
+
+    const { token } = response.data;
+
+    yield put(signInSuccess(token));
+    history.push('/');
+  } catch (err) {
+    toast.error(err.response.data[0].message);
   }
 }
 
@@ -41,5 +59,6 @@ export function signOut() {
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
   takeLatest('@auth/SIGN_IN_REQUEST', signIn),
+  takeLatest('@auth/SIGN_UP_REQUEST', signUp),
   takeLatest('@auth/SIGN_OUT', signOut),
 ]);

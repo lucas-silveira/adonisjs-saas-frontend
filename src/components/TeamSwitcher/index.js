@@ -25,18 +25,6 @@ export default function TeamSwitcher() {
     dispatch(getTeamsRequest());
   }, []); //eslint-disable-line
 
-  function handleSelectTeam(team) {
-    dispatch(selectTeam(team));
-  }
-
-  function handleOpenModal() {
-    dispatch(openModal());
-  }
-
-  function handleCloseModal() {
-    dispatch(closeModal());
-  }
-
   function handleInputChange(event) {
     setNewTeam(event.target.value);
   }
@@ -47,15 +35,11 @@ export default function TeamSwitcher() {
     dispatch(createTeamRequest(newTeam));
   }
 
-  function handleSignOut() {
-    dispatch(signOut());
-  }
-
   return (
     <Container>
       <TeamList>
         {teams.data.map(team => (
-          <Team key={team.id} onClick={() => handleSelectTeam(team)}>
+          <Team key={team.id} onClick={() => dispatch(selectTeam(team))}>
             <img
               alt={team.name}
               src={`https://ui-avatars.com/api?font-size=0.33&background=7159c1&color=fff&name=${team.name}`}
@@ -63,7 +47,7 @@ export default function TeamSwitcher() {
           </Team>
         ))}
 
-        <NewTeam onClick={handleOpenModal}>Novo</NewTeam>
+        <NewTeam onClick={() => dispatch(openModal())}>Novo</NewTeam>
 
         {teams.teamModalOpen && (
           <Modal>
@@ -80,7 +64,11 @@ export default function TeamSwitcher() {
               <Button size="large" type="submit">
                 Salvar
               </Button>
-              <Button size="small" color="gray" onClick={handleCloseModal}>
+              <Button
+                size="small"
+                color="gray"
+                onClick={() => dispatch(closeModal())}
+              >
                 Cancelar
               </Button>
             </form>
@@ -88,7 +76,7 @@ export default function TeamSwitcher() {
         )}
       </TeamList>
 
-      <Logout onClick={handleSignOut}>Sair</Logout>
+      <Logout onClick={() => dispatch(signOut())}>Sair</Logout>
     </Container>
   );
 }
