@@ -1,10 +1,10 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, select, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 import history from '~/services/history';
 
-import { signInSuccess } from './actions';
+import { signInSuccess, getPermissionsSuccess } from './actions';
 
 export function* signIn({ payload }) {
   try {
@@ -45,6 +45,23 @@ export function* signUp({ payload }) {
   }
 }
 
+export function* getPermissions() {
+  try {
+    const team = yield select(state => state.teams.active);
+    const signed = yield select(state => state.auth.signed);
+
+    if (!signed || !team) return;
+
+    const response = yield call(api.get, 'permissions');
+
+    const { roles, permissions } = response.data;
+
+    yield put(getPermissionsSuccess(roles, permissions));
+  } catch (err) {
+    toast.error(err.response.data[0].message);
+  }
+}
+
 export function setToken({ payload }) {
   if (!payload) return;
 
@@ -62,6 +79,7 @@ export function signOut() {
 
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
+  takeLatest('persist/REHYDRATE', getPermissions),
   takeLatest('@auth/SIGN_IN_REQUEST', signIn),
   takeLatest('@auth/SIGN_UP_REQUEST', signUp),
   takeLatest('@auth/SIGN_OUT', signOut),

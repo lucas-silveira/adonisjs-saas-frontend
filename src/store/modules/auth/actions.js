@@ -12,6 +12,13 @@ export function signInSuccess(token) {
   };
 }
 
+export function getPermissionsSuccess(roles, permissions) {
+  return {
+    type: '@auth/GET_PERMISSIONS_SUCCESS',
+    payload: { roles, permissions },
+  };
+}
+
 export function signUpRequest(name, email, password) {
   return {
     type: '@auth/SIGN_UP_REQUEST',

@@ -11,6 +11,7 @@ import {
 
 import { openMembersModal } from '~/store/modules/members/actions';
 
+import Can from '~/components/Can';
 import Button from '~/styles/components/Button';
 import Modal from '~/components/Modal';
 import Members from '~/components/Members';
@@ -51,9 +52,11 @@ export default function Projects() {
           <header>
             <h1>{teams.active.name}</h1>
             <div>
-              <Button onClick={() => dispatch(openProjectsModal())}>
-                + Novo
-              </Button>
+              <Can checkPermission="projects_create">
+                <Button onClick={() => dispatch(openProjectsModal())}>
+                  + Novo
+                </Button>
+              </Can>
               <Button onClick={() => dispatch(openMembersModal())}>
                 Membros
               </Button>
@@ -61,10 +64,10 @@ export default function Projects() {
           </header>
 
           {projectsData.map(project => (
-              <Project key={project.id}>
-                <p>{project.title}</p>
-              </Project>
-            ))}
+            <Project key={project.id}>
+              <p>{project.title}</p>
+            </Project>
+          ))}
         </>
       ) : (
         <header>
